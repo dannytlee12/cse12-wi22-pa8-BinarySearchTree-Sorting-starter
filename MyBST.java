@@ -10,23 +10,144 @@ public class MyBST<K extends Comparable<K>,V>{
     }
 
     public V insert(K key, V value){
-        // TODO
+        if(key == null){
+          throw new NullPointerException();
+        }
+        MyBSTNode<K,V> curr = root;
+        while(curr.getKey() != key){
+          if(curr.getKey() > key){ // search the left subtree
+            if(curr.getLeft() == null){
+              break;
+            }
+            else{
+              curr = curr.getLeft();
+            }
+          }
+          else{ // search the right subtree
+            if(curr.getRight() == null){
+              break;
+            }
+            else{
+              curr = curr.getRight();
+            }
+          }
+        }
+
+        if(curr.getKey() == key){
+          V oldVal = curr.getValue();
+          curr.setValue(value);
+          return oldVal;
+        }
+        else{
+          MyBSTNode<K,V> newNode = new MyBSTNode(key, value, curr);
+          size++;
+        }
         return null;
     }
 
     public V search(K key){
-        // TODO
-        return null;
+      MyBSTNode<K,V> curr = root;
+      while(curr.getKey() != key){
+        if(curr.getKey() > key){ // search the left subtree
+          if(curr.getLeft() == null){
+            break;
+          }
+          else{
+            curr = curr.getLeft();
+          }
+        }
+        else{ // search the right subtree
+          if(curr.getRight() == null){
+            break;
+          }
+          else{
+            curr = curr.getRight();
+          }
+        }
+      }
+      if(curr.getKey() == key){
+        return curr.getValue()
+      }
+      return null;
     }
 
     public V remove(K key){
-        // TODO
+      //find the key
+      while(curr.getKey() != key){
+        if(curr.getKey() > key){ // search the left subtree
+          if(curr.getLeft() == null){
+            break;
+          }
+          else{
+            curr = curr.getLeft();
+          }
+        }
+        else{ // search the right subtree
+          if(curr.getRight() == null){
+            break;
+          }
+          else{
+            curr = curr.getRight();
+          }
+        }
+      }
+      if(curr.getKey() != key){ // key doesnt exist
         return null;
+      }
+
+      //key exists
+      if(curr.getLeft() != null && curr.getRight() != null){ // 2 children
+        K newKey = curr.successor().getKey();
+        V newValue = curr.successor().getValue();
+        curr.setKey(newKey);
+        curr.setValue(newValue);
+        curr.successor().setParent(null);
+      }
+      else if(curr.getLeft() != null && curr.getRight() == null){ //only left
+        curr.getLeft().setParent(curr.getParent());
+        if(curr.getParent().getLeft() == curr){
+          curr.getParent().setLeft(curr.getLeft());
+        }
+        else if(curr.getParent().getRight() == curr){
+          curr.getParent().setRight(curr.getLeft());
+        }
+      }
+      else if(curr.getLeft() == null && curr.getRight() != null){ //only right
+        curr.getRight().setParent(curr.getParent());
+        if(curr.getParent().getLeft() == curr){
+          curr.getParent().setLeft(curr.getRight());
+        }
+        else if(curr.getParent().getRight() == curr){
+          curr.getParent().setRight(curr.getRight());
+        }
+      }
+      else{ // no children
+        if(curr.getParent().getLeft() == curr){
+          curr.getParent().setLeft(null);
+        }
+        else if(curr.getParent().getRight() == curr){
+          curr.getParent().setRight(null);
+        }
+        curr.setParent(null);
+      }
+      size--;
     }
-    
+
     public ArrayList<MyBSTNode<K, V>> inorder(){
-        // TODO
-        return null;
+        ArrayList<MyBSTNode<K, V>> ansList = new ArrayList<MyBSTNode<K, V>>();
+        MyBSTNode<K,V> curr = root;
+        MyBSTNode<K,V> succ;
+        while(curr.getLeft() != null){
+          curr = curr.getLeft();
+        }
+        succ = curr.successor();
+        while(succ > curr){
+          ansList.add(curr);
+          curr = curr.successor();
+          succ = succ.successor();
+        }
+        ansList.add(curr);
+        return ansList;
     }
 
     static class MyBSTNode<K,V>{
@@ -48,7 +169,7 @@ public class MyBST<K extends Comparable<K>,V>{
         public MyBSTNode(K key, V value, MyBSTNode<K, V> parent){
             this.key = key;
             this.value = value;
-            this.parent = parent; 
+            this.parent = parent;
         }
 
         /**
@@ -76,7 +197,7 @@ public class MyBST<K extends Comparable<K>,V>{
         }
 
         /**
-         * Return the left child 
+         * Return the left child
          * @return left child
          */
         public MyBSTNode<K,V> getLeft(){
@@ -84,7 +205,7 @@ public class MyBST<K extends Comparable<K>,V>{
         }
 
         /**
-         * Return the right child 
+         * Return the right child
          * @return right child
          */
         public MyBSTNode<K,V> getRight(){
@@ -142,16 +263,21 @@ public class MyBST<K extends Comparable<K>,V>{
          */
         public MyBSTNode<K, V> successor(){
             if(this.getRight() != null){
-                MyBSTNode<K,V> curr = this.getRight();
+                MyBSTNode<K,V> curr = this.getRight(); //start in the right
+                //subtree
                 while(curr.getLeft() != null){
                     curr = curr.getLeft();
                 }
+                //get the leftmost leaf of the right subtree
                 return curr;
             }
-            else{
+            else{//if there is no greater child, the successor is one of the
+              //ancestor nodes.
                 MyBSTNode<K,V> parent = this.getParent();
                 MyBSTNode<K,V> curr = this;
                 while(parent != null && curr == parent.getRight()){
+                  //keep looking at ancestors until you find one that is the
+                  //left child of its parent
                     curr = parent;
                     parent = parent.getParent();
                 }
@@ -160,7 +286,25 @@ public class MyBST<K extends Comparable<K>,V>{
         }
 
         public MyBSTNode<K, V> predecessor(){
-            // TODO
+            if(this.getLeft() != null){
+              //if there's a left subtree, get the rightmost node from it
+                MyBSTNode<K,V> curr = this.getLeft();
+                while(curr.getright != null){
+                  curr = curr.getLeft();
+                }
+                return curr;
+            }
+            //if there's no left subtree, return the first ancestor whose on
+            //the left side
+            else{
+              MyBSTNode<K,V> parent = this.getParent();
+              MyBSTNode<K,V> curr = this;
+              while(parent != null && curr == parent.getRight()){
+                  curr = parent;
+                  parent = parent.getParent();
+              }
+              return parent;
+            }
             return null;
         }
 
@@ -173,10 +317,10 @@ public class MyBST<K extends Comparable<K>,V>{
                 return false;
 
             MyBSTNode<K,V> comp = (MyBSTNode<K,V>)obj;
-            
-            return( (this.getKey() == null ? comp.getKey() == null : 
-                this.getKey().equals(comp.getKey())) 
-                && (this.getValue() == null ? comp.getValue() == null : 
+
+            return( (this.getKey() == null ? comp.getKey() == null :
+                this.getKey().equals(comp.getKey()))
+                && (this.getValue() == null ? comp.getValue() == null :
                 this.getValue().equals(comp.getValue())));
         }
 
