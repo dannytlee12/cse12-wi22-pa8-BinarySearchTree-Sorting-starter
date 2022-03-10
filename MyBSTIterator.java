@@ -1,3 +1,11 @@
+/**
+ * Name: Danny Lee
+ * ID: A17209209
+ * Email:dtl001@ucsd.edu
+ * File description: this file contains the MyBSTIterator class. It is an
+ iterator for the MyBST class.
+ */
+
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -43,15 +51,19 @@ public class MyBSTIterator<K extends Comparable<K>, V> extends MyBST<K, V> {
          * This method removes the last visited node from the tree.
          */
         public void remove() {
-            if (lastVisited == null) {
+            if (lastVisited == null) { //cannot remove before moving the
+              //iterator or after having just removed
                 throw new IllegalStateException();
             }
             if (lastVisited.getRight() != null &&
                     lastVisited.getLeft() != null) {
-                next = lastVisited;
+                next = lastVisited; //move next backwards once
             }
             MyBSTIterator.this.remove(lastVisited.getKey());
+            //remove the lastVisited
             lastVisited = null;
+            //change lastVisited to null so that remove cannot be used again
+            //right after this 
         }
     }
 

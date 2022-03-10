@@ -1,3 +1,12 @@
+/**
+ * Name: Danny Lee
+ * ID: A17209209
+ * Email:dtl001@ucsd.edu
+ * File description: this file contains the MyCalendar class which is able to
+ book events given a start time and end time. Events are not allowed to have
+ overlapping times.
+ */
+
 public class MyCalendar {
     MyTreeMap<Integer, Integer> calendar;
 

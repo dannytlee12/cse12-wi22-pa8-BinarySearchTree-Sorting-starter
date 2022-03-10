@@ -1,3 +1,11 @@
+/**
+ * Name: Danny Lee
+ * ID: A17209209
+ * Email:dtl001@ucsd.edu
+ * File description: this file contains the CustomTester class which tests
+ the edge cases of the methods for the MyBST class.
+ */
+
 import java.util.*;
 import static org.junit.Assert.*;
 import org.junit.*;

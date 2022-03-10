@@ -1,3 +1,12 @@
+/**
+ * Name: Danny Lee
+ * ID: A17209209
+ * Email:dtl001@ucsd.edu
+ * File description: This file contains the MyBST class and the MyBSTNode
+ subclass. The MyBST class is an implementation of the binary search tree
+ data structure which uses MyBSTNodes as nodes. 
+ */
+
 import java.util.ArrayList;
 
 
