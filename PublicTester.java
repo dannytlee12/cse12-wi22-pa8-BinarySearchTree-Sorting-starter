@@ -7,7 +7,7 @@ public class PublicTester {
 
     MyBST<Integer, Integer> completeTree;
 
-    // 
+    //
     /**
      * The setup method create a complete tree with height three
      * The tree has following structure and will be used as testing purpose
@@ -20,17 +20,17 @@ public class PublicTester {
     @Before
     public void setup(){
 
-        MyBST.MyBSTNode<Integer, Integer> root = 
+        MyBST.MyBSTNode<Integer, Integer> root =
             new MyBST.MyBSTNode(4, 1, null);
-        MyBST.MyBSTNode<Integer, Integer> two = 
+        MyBST.MyBSTNode<Integer, Integer> two =
             new MyBST.MyBSTNode(2, 1, root);
-        MyBST.MyBSTNode<Integer, Integer> six = 
+        MyBST.MyBSTNode<Integer, Integer> six =
             new MyBST.MyBSTNode(6, 1, root);
-        MyBST.MyBSTNode<Integer, Integer> one = 
+        MyBST.MyBSTNode<Integer, Integer> one =
             new MyBST.MyBSTNode(1, 2, two);
-        MyBST.MyBSTNode<Integer, Integer> three = 
+        MyBST.MyBSTNode<Integer, Integer> three =
             new MyBST.MyBSTNode(3, 30, two);
-        MyBST.MyBSTNode<Integer, Integer> five = 
+        MyBST.MyBSTNode<Integer, Integer> five =
             new MyBST.MyBSTNode(5, 50, six);
 
         this.completeTree = new MyBST();
@@ -55,7 +55,7 @@ public class PublicTester {
     // Test predecessor() on a leaf node
     @Test
     public void testNodePredecessorLeafNode() {
-        MyBST.MyBSTNode<Integer, Integer> root = completeTree.root; 
+        MyBST.MyBSTNode<Integer, Integer> root = completeTree.root;
         assertSame(root, root.getRight().getLeft().predecessor());
     }
 
@@ -64,7 +64,7 @@ public class PublicTester {
     // Test insert method
     @Test
     public void testInsert(){
-        MyBST.MyBSTNode<Integer, Integer> root = completeTree.root; 
+        MyBST.MyBSTNode<Integer, Integer> root = completeTree.root;
         completeTree.insert(10, 1);
         assertEquals((Integer)10, root.getRight().getRight().getKey());
     }
@@ -79,7 +79,7 @@ public class PublicTester {
     // Test remove method
     @Test
     public void testRemove(){
-        MyBST.MyBSTNode<Integer, Integer> root = completeTree.root; 
+        MyBST.MyBSTNode<Integer, Integer> root = completeTree.root;
         assertEquals((Integer)30, completeTree.remove(3));
         assertNull(root.getLeft().getRight());
         assertEquals((Integer)1, completeTree.remove(6));
@@ -89,8 +89,8 @@ public class PublicTester {
     // Test inorder method
     @Test
     public void testInorder(){
-        MyBST.MyBSTNode<Integer, Integer> root = completeTree.root; 
-        ArrayList<MyBST.MyBSTNode<Integer, Integer>> expectedRes 
+        MyBST.MyBSTNode<Integer, Integer> root = completeTree.root;
+        ArrayList<MyBST.MyBSTNode<Integer, Integer>> expectedRes
             = new ArrayList<>();
         expectedRes.add(root.getLeft().getLeft());
         expectedRes.add(root.getLeft());
@@ -98,7 +98,7 @@ public class PublicTester {
         expectedRes.add(root);
         expectedRes.add(root.getRight().getLeft());
         expectedRes.add(root.getRight());
-        ArrayList<MyBST.MyBSTNode<Integer, Integer>> actualRes 
+        ArrayList<MyBST.MyBSTNode<Integer, Integer>> actualRes
             = completeTree.inorder();
         for (int i=0; i<expectedRes.size(); i++){
             assertSame(expectedRes.get(i), actualRes.get(i));
@@ -107,7 +107,7 @@ public class PublicTester {
 
     // ====== MyBSTIterator class ======
 
-    // Test the initial state of iterator and the function of 
+    // Test the initial state of iterator and the function of
     // properly move to the next node
     @Test
     public void testIteratorProperFunctionality(){
@@ -117,7 +117,7 @@ public class PublicTester {
         iterTree.root = completeTree.root;
 
         // Initialize the BST value iterator that start from root
-        MyBSTIterator<Integer, Integer>.MyBSTValueIterator vi = 
+        MyBSTIterator<Integer, Integer>.MyBSTValueIterator vi =
             iterTree.new MyBSTValueIterator(iterTree.root);
 
         // next should points to the root

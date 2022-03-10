@@ -14,8 +14,13 @@ public class MyBST<K extends Comparable<K>,V>{
           throw new NullPointerException();
         }
         MyBSTNode<K,V> curr = root;
-        while(curr.getKey() != key){
-          if(curr.getKey() > key){ // search the left subtree
+        if(curr == null){
+          curr = new MyBSTNode(key, value, null);
+          root = curr;
+          return null;
+        }
+        while(curr.getKey().compareTo(key) != 0){
+          if(curr.getKey().compareTo(key) > 0){ // search the left subtree
             if(curr.getLeft() == null){
               break;
             }
@@ -33,22 +38,32 @@ public class MyBST<K extends Comparable<K>,V>{
           }
         }
 
-        if(curr.getKey() == key){
+        if(curr.getKey().compareTo(key) == 0){
           V oldVal = curr.getValue();
           curr.setValue(value);
           return oldVal;
         }
+        else if(curr.getKey().compareTo(key) > 0){
+
+          MyBSTNode<K,V> newNode = new MyBSTNode(key, value, curr);
+          curr.setLeft(newNode);
+          size++;
+        }
         else{
           MyBSTNode<K,V> newNode = new MyBSTNode(key, value, curr);
+          curr.setRight(newNode);
           size++;
         }
         return null;
     }
 
     public V search(K key){
+      if(key == null){
+        return null;
+      }
       MyBSTNode<K,V> curr = root;
       while(curr.getKey() != key){
-        if(curr.getKey() > key){ // search the left subtree
+        if(curr.getKey().compareTo(key) > 0){ // search the left subtree
           if(curr.getLeft() == null){
             break;
           }
@@ -66,15 +81,16 @@ public class MyBST<K extends Comparable<K>,V>{
         }
       }
       if(curr.getKey() == key){
-        return curr.getValue()
+        return curr.getValue();
       }
       return null;
     }
 
     public V remove(K key){
+      MyBSTNode<K,V> curr = root;
       //find the key
       while(curr.getKey() != key){
-        if(curr.getKey() > key){ // search the left subtree
+        if(curr.getKey().compareTo(key) > 0){ // search the left subtree
           if(curr.getLeft() == null){
             break;
           }
@@ -101,47 +117,58 @@ public class MyBST<K extends Comparable<K>,V>{
         V newValue = curr.successor().getValue();
         curr.setKey(newKey);
         curr.setValue(newValue);
+        if(curr.successor().getParent().getLeft().getKey().compareTo(
+                                            curr.successor().getKey()) == 0){
+          curr.successor().getParent().setLeft(null);
+        }
+        else{
+          curr.successor().getParent().setRight(null);
+        }
         curr.successor().setParent(null);
       }
       else if(curr.getLeft() != null && curr.getRight() == null){ //only left
         curr.getLeft().setParent(curr.getParent());
-        if(curr.getParent().getLeft() == curr){
+        if(curr.getParent().getKey().compareTo(curr.getKey()) > 0){
           curr.getParent().setLeft(curr.getLeft());
         }
-        else if(curr.getParent().getRight() == curr){
+        else if(curr.getParent().getKey().compareTo(curr.getKey()) < 0){
           curr.getParent().setRight(curr.getLeft());
         }
       }
       else if(curr.getLeft() == null && curr.getRight() != null){ //only right
         curr.getRight().setParent(curr.getParent());
-        if(curr.getParent().getLeft() == curr){
+        if(curr.getParent().getKey().compareTo(curr.getKey()) > 0){
           curr.getParent().setLeft(curr.getRight());
         }
-        else if(curr.getParent().getRight() == curr){
+        else if(curr.getParent().getKey().compareTo(curr.getKey()) < 0){
           curr.getParent().setRight(curr.getRight());
         }
       }
       else{ // no children
-        if(curr.getParent().getLeft() == curr){
+        if(curr.getParent().getKey().compareTo(curr.getKey()) > 0){
           curr.getParent().setLeft(null);
         }
-        else if(curr.getParent().getRight() == curr){
+        else if(curr.getParent().getKey().compareTo(curr.getKey()) < 0){
           curr.getParent().setRight(null);
         }
         curr.setParent(null);
       }
       size--;
+      return curr.getValue();
     }
 
     public ArrayList<MyBSTNode<K, V>> inorder(){
         ArrayList<MyBSTNode<K, V>> ansList = new ArrayList<MyBSTNode<K, V>>();
         MyBSTNode<K,V> curr = root;
         MyBSTNode<K,V> succ;
+        if(curr == null){
+          return ansList;
+        }
         while(curr.getLeft() != null){
           curr = curr.getLeft();
         }
         succ = curr.successor();
-        while(succ > curr){
+        while(succ != null && succ.getKey().compareTo(curr.getKey()) > 0){
           ansList.add(curr);
           curr = curr.successor();
           succ = succ.successor();
@@ -289,8 +316,8 @@ public class MyBST<K extends Comparable<K>,V>{
             if(this.getLeft() != null){
               //if there's a left subtree, get the rightmost node from it
                 MyBSTNode<K,V> curr = this.getLeft();
-                while(curr.getright != null){
-                  curr = curr.getLeft();
+                while(curr.getRight() != null){
+                  curr = curr.getRight();
                 }
                 return curr;
             }
@@ -299,13 +326,13 @@ public class MyBST<K extends Comparable<K>,V>{
             else{
               MyBSTNode<K,V> parent = this.getParent();
               MyBSTNode<K,V> curr = this;
-              while(parent != null && curr == parent.getRight()){
+              while(parent != null && curr == parent.getLeft()){
                   curr = parent;
                   parent = parent.getParent();
               }
               return parent;
             }
-            return null;
+
         }
 
         /** This method compares if two node objects are equal.

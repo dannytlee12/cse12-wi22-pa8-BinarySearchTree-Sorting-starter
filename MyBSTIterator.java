@@ -32,8 +32,8 @@ public class MyBSTIterator<K extends Comparable<K>, V> extends MyBST<K, V> {
           }
           lastVisited = next;
           next = next.successor();
+          return lastVisited;
 
-          return null;
         }
 
         /**

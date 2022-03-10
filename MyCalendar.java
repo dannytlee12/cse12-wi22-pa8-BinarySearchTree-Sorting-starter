@@ -9,6 +9,7 @@ public class MyCalendar {
         if(start < 0 || start >= end){
           throw new IllegalArgumentException();
         }
+
         if(calendar.ceilingKey(start) >= start
             || calendar.floorKey(end) < end){
           return false;
